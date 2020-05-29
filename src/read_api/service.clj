@@ -4,11 +4,12 @@
             [io.pedestal.http.route :as route]
             [io.pedestal.http.route.definition :refer [defroutes]]
             [ns-tracker.core :refer [ns-tracker]]
-            [read-api.views.hello :as hello]))
+            [read-api.views.hello :as hello]
+            [read-api.interceptors :as interceptors]))
 
-(defroutes routes
-  [[["/"
-     ["/greet" {:get hello/respond-hello}]]]])
+(def routes
+  (route/expand-routes
+    #{["/greet" :get interceptors/echo :route-name :test]}))
 
 (def modified-namespaces (ns-tracker "src"))
 

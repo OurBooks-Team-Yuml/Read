@@ -22,7 +22,7 @@ services:
         networks:
             - books
         environment:
-            DATABASE_URI: mongodb://read_books:secret@read-db
+            DATABASE_URI: mongodb://read_books:secret@localhost/read_books
         working_dir: /app
         ports:
             - 8890:8890

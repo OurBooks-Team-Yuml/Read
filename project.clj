@@ -8,6 +8,7 @@
                  [io.pedestal/pedestal.route "0.5.8"]
                  [io.pedestal/pedestal.jetty "0.5.8"]
                  [ns-tracker "0.4.0"]
+                 [com.novemberain/monger "3.1.0"]
                  #_[org.slfj/slf4j-simple "1.7.30"]]
   :main ^:skip-aot read-api.server
   :target-path "target/%s"
