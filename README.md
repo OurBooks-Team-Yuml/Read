@@ -1,14 +1,10 @@
 # read-api
 
-FIXME: description
+Microservice for books application used for marking / unmarking book as read.
 
 ## Installation
-
-Download from http://example.com/FIXME.
-
-## Usage
-
-FIXME: explanation
-
-    $ java -jar read-api-0.1.0-standalone.jar [args]
+To run development server run following command:
+```
+docker-compose up --build
+```
 
