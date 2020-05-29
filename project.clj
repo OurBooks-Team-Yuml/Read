@@ -7,9 +7,9 @@
                  [io.pedestal/pedestal.service "0.5.8"]
                  [io.pedestal/pedestal.route "0.5.8"]
                  [io.pedestal/pedestal.jetty "0.5.8"]
-                 [org.slf4j/slf4j-simple "1.7.28"]]
-  :main ^:skip-aot read-api.core
+                 #_[org.slfj/slf4j-simple "1.7.30"]]
+  :main ^:skip-aot read-api.server
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
-             :dev {:aliases {"run-dev" ["trampoline" "run" "-m" "hello-world.server/run-dev"]}
+             :dev {:aliases {"run-dev" ["trampoline" "run" "-m" "read-api.server/run-dev"]}
                    :dependencies [[io.pedestal/pedestal.service-tools "0.5.8"]]}})

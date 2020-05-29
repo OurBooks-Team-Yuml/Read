@@ -1,0 +1,31 @@
+version: '3.7'
+
+networks:
+    books:
+        name: books-external
+
+services:
+    read-db:
+        image: mongo:latest
+        networks:
+            - books
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: read_books
+            MONGO_INITDB_ROOT_PASSWORD: secret
+            MONGO_INITDB_DATABASE: read_books
+    read-ms:
+        build:
+            context: ../..
+            dockerfile: ./docker/development/Dockerfile
+        volumes:
+            - ../../:/app
+        networks:
+            - books
+        environment:
+            DATABASE_URI: mongodb://read_books:secret@read-db
+        working_dir: /app
+        ports:
+            - 8890:8890
+        command: '/app/tools/run-backend.sh'
+        depends_on:
+            - read-db
