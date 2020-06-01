@@ -9,10 +9,13 @@ services:
         image: mongo:latest
         networks:
             - books
+        volumes:
+            - "../../:/app"
+            - "./initdb.d:/docker-entrypoint-initdb.d"
         environment:
-            MONGO_INITDB_ROOT_USERNAME: read_books
+            MONGO_INITDB_ROOT_USERNAME: readbooks
             MONGO_INITDB_ROOT_PASSWORD: secret
-            MONGO_INITDB_DATABASE: read_books
+            MONGO_INITDB_DATABASE: readbooks
     read-ms:
         build:
             context: ../..
@@ -22,7 +25,7 @@ services:
         networks:
             - books
         environment:
-            DATABASE_URI: mongodb://read_books:secret@read-db
+            DATABASE_URI: mongodb://user:secret@read-db/readbooks
         working_dir: /app
         ports:
             - 8890:8890
