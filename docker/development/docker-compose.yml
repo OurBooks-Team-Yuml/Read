@@ -10,9 +10,9 @@ services:
         networks:
             - books
         environment:
-            MONGO_INITDB_ROOT_USERNAME: readbooks/readbooks
+            MONGO_INITDB_ROOT_USERNAME: readbooks
             MONGO_INITDB_ROOT_PASSWORD: secret
-            MONGO_INITDB_DATABASE: readbooks/readbooks
+            MONGO_INITDB_DATABASE: readbooks
     read-ms:
         build:
             context: ../..
