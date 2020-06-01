@@ -8,7 +8,7 @@
 
 (def routes
   (route/expand-routes)
-  #{["/reads/read/:book-id" :post [it/echo it/db-interceptor it/read-book] :route-name :read]})
+  #{["/reads/read/:book-id" :get [it/echo it/db-interceptor it/read-book it/book-found] :route-name :read]})
 
 (def modified-namespaces (ns-tracker "src"))
 
