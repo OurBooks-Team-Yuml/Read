@@ -3,6 +3,7 @@
             [monger.collection :as mc]))
 
 (defonce mongo-uri (System/getenv "DATABASE_URI"))
+(defonce collection "readbooks")
 
 (def db-interceptor
   {:name :database-interceptor
@@ -11,11 +12,21 @@
      (let [{:keys [conn db]} (mg/connect-via-uri mongo-uri)]
        (assoc context :db db)))})
 
+(def get-book-id-from-path [context]
+  (-> context :request :path-params :book-id))
+
+(def find-book-by-id
+  {:name :is-in-db
+   :enter
+   (fn [context]
+     (let [book (mc/find-maps (-> context :db) collection {:book-id (get-book-id-from-path context)})]
+       (assoc context :book book)))})
+
 (def read-book
   {:name :read-book
    :enter
    (fn [context]
-     (mc/insert (-> context :db) "readbooks" {:book-id (-> context :request :path-params :book-id)})
+     (mc/insert (-> context :db) collection {:book-id (get-book-id-from-path context)})
      context)})
 
 (defn response [status body & {:as headers}]
