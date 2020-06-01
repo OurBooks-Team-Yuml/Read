@@ -1,18 +1,29 @@
 (ns read-api.interceptors
-  (:require [monger.core :as mg]))
+  (:require [monger.core :as mg]
+            [monger.collection :as mc]))
 
-;(defonce mongo-uri (System/getenv "DATABASE_URI"))
+(defonce mongo-uri (System/getenv "DATABASE_URI"))
 
-;(defonce mongo-db (mg/connect-via-uri mongo-uri))
+(defonce mongo-db (mg/connect-via-uri mongo-uri))
 
 ;(defonce database (atom mongo-db))
 
 (def db-interceptor
   {:name :database-interceptor
-   :enter #(assoc % ::db "d")})
+   :enter
+   (fn [context]
+     (let [{:keys [conn db]} (mg/connect-via-uri mongo-uri)]
+       (assoc context :db db)))})
+
+(def read-book
+  {:name :read-book
+   :enter
+   (fn [context]
+     (mc/insert (-> context :db) "readbooks" {:book-id (-> context :request :path-params :book-id)})
+     context)})
 
 (defn response [status body & {:as headers}]
-  {:status status :body "test"})
+  {:status status :body (-> body :request :path-params :book-id)})
 
 (def ok       (partial response 200))
 (def created  (partial response 201))
@@ -20,7 +31,7 @@
 
 (def echo
   {:name :echo
-   :enter
+   :leave
    (fn [context]
      (let [request (:request context)
            response (ok context)]

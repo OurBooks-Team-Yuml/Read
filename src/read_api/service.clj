@@ -9,7 +9,7 @@
 
 (def routes
   (route/expand-routes
-    #{["/greet" :get interceptors/echo :route-name :test]}))
+    #{["/reads/read/:book-id" :post [interceptors/echo interceptors/db-interceptor interceptors/read-book] :route-name :read]}))
 
 (def modified-namespaces (ns-tracker "src"))
 
