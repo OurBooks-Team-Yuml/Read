@@ -12,7 +12,7 @@
      (let [{:keys [conn db]} (mg/connect-via-uri mongo-uri)]
        (assoc context :db db)))})
 
-(def get-book-id-from-path [context]
+(defn get-book-id-from-path [context]
   (-> context :request :path-params :book-id))
 
 (def find-book-by-id
@@ -24,20 +24,21 @@
 
 (def book-found?
   {:name :book-found?
-   :leave
+   :enter
    (fn [context]
      (if-let [[op & args] (:book context)]
+       nil
        context))})
 
 (def read-book
   {:name :read-book
-   :leave
+   :enter
    (fn [context]
      (mc/insert (-> context :db) collection {:book-id (get-book-id-from-path context)})
      context)})
 
 (defn response [status body & {:as headers}]
-  {:status status :body (-> body :request :path-params :book-id)})
+  {:status status :body (get-book-id-from-path body)})
 
 (def ok       (partial response 200))
 (def created  (partial response 201))
