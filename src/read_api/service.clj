@@ -4,11 +4,15 @@
             [io.pedestal.http.route :as route]
             [io.pedestal.http.route.definition :refer [defroutes]]
             [ns-tracker.core :refer [ns-tracker]]
-            [read-api.interceptors :as it]))
+            [read-api.interceptors :as inter]))
 
 (def routes
-  (route/expand-routes)
-  #{["/reads/read/:book-id" :get [it/echo it/db-interceptor it/read-book it/book-found] :route-name :read]})
+  (route/expand-routes
+    #{["/reads/read/:book-id" :get [inter/echo
+                                    inter/db-interceptor
+                                    inter/find-book-by-id
+                                    inter/book-found?
+                                    inter/read-book] :route-name :read]}))
 
 (def modified-namespaces (ns-tracker "src"))
 
