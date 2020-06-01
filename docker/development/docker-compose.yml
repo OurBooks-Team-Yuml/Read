@@ -9,6 +9,9 @@ services:
         image: mongo:latest
         networks:
             - books
+        volumes:
+            - "../../:/app"
+            - "./initdb.d:/docker-entrypoint-initdb.d"
         environment:
             MONGO_INITDB_ROOT_USERNAME: readbooks
             MONGO_INITDB_ROOT_PASSWORD: secret
