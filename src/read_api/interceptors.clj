@@ -4,10 +4,6 @@
 
 (defonce mongo-uri (System/getenv "DATABASE_URI"))
 
-(defonce mongo-db (mg/connect-via-uri mongo-uri))
-
-;(defonce database (atom mongo-db))
-
 (def db-interceptor
   {:name :database-interceptor
    :enter
