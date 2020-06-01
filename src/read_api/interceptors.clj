@@ -22,9 +22,16 @@
      (let [book (mc/find-maps (-> context :db) collection {:book-id (get-book-id-from-path context)})]
        (assoc context :book book)))})
 
+(def book-found?
+  {:name :book-found?
+   :leave
+   (fn [context]
+     (if-let [[op & args] (:book context)]
+       context))})
+
 (def read-book
   {:name :read-book
-   :enter
+   :leave
    (fn [context]
      (mc/insert (-> context :db) collection {:book-id (get-book-id-from-path context)})
      context)})
