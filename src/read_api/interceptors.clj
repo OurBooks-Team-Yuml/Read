@@ -29,6 +29,10 @@
   (add (-> context :db) {:book-id (get-book-id-from-path context)})
   context)
 
+(defn remove-record [context]
+  (remove-with-id (-> context :db) (-> context :book first :_id))
+  (context))
+
 (def read-book
   {:name :read-book
    :enter
@@ -36,6 +40,14 @@
      (if-let [book (-> context :book empty? not)]
        context
        (add-record context)))})
+
+(def unread-book
+  {:name :unread-book
+   :enter
+   (fn [context]
+     (if-let [book (-> context :book empty?)]
+       context
+       (remove-record context)))})
 
 (def echo
   {:name :echo
