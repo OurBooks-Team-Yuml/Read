@@ -1,14 +1,16 @@
 (ns read-api.interceptors
+  (:require [io.pedestal.http :refer [json-response]])
   (use [read-api.database]))
 
 (defn get-book-id-from-path [context]
   (-> context :request :path-params :book-id))
 
 (defn response [status body & {:as headers}]
-  {:status status :body (get-book-id-from-path body)})
+  {:status status :body body :headers {"Content-Type" "application/json"}})
 
-(def ok       (partial response 200))
-(def created  (partial response 201))
+(def ok        (partial response 200))
+(def created   (partial response 201))
+(def no-body   (partial response 204))
 (def not-found (partial response 404))
 
 (def db-interceptor
@@ -54,5 +56,5 @@
    :leave
    (fn [context]
      (let [request (:request context)
-           response (ok context)]
+           response (created {:book-id (get-book-id-from-path context)})]
        (assoc context :response response)))})
