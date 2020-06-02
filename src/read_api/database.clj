@@ -11,3 +11,6 @@
 
 (defn add [db data]
   (mc/insert db coll data))
+
+(defn remove-with-id [db oid]
+  (mc/remove-by-id db coll oid))
