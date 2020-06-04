@@ -11,7 +11,11 @@
     #{["/reads/read/:book-id" :post [inter/echo
                                      inter/db-interceptor
                                      inter/find-book-by-id
-                                     inter/read-book] :route-name :read]}))
+                                     inter/read-book] :route-name :read]
+      ["/reads/unread/:book-id" :delete [inter/echo
+                                         inter/db-interceptor
+                                         inter/find-book-by-id
+                                         inter/unread-book] :route-name :unread]}))
 
 (def modified-namespaces (ns-tracker "src"))
 
