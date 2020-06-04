@@ -8,10 +8,11 @@
 (defn response [status body & {:as headers}]
   {:status status :body body :headers {"Content-Type" "application/json"}})
 
-(def ok        (partial response 200))
-(def created   (partial response 201))
-(def no-body   (partial response 204))
-(def not-found (partial response 404))
+(def ok          (partial response 200))
+(def created     (partial response 201))
+(def no-body     (partial response 204))
+(def bad-request (partial response 400))
+(def not-found   (partial response 404))
 
 (def db-interceptor
   {:name :database-interceptor
@@ -33,7 +34,7 @@
 
 (defn remove-record [context]
   (remove-with-id (-> context :db) (-> context :book first :_id))
-  (context))
+  context)
 
 (def read-book
   {:name :read-book
@@ -41,7 +42,13 @@
    (fn [context]
      (if-let [book (-> context :book empty? not)]
        context
-       (add-record context)))})
+       (add-record context)))
+   :leave
+   (fn [context]
+     (if-let [book (-> context :book empty? not)]
+       (assoc context :response
+              (bad-request {:errors {:book-id ["You cannot mark the book second time."]}}))
+       (assoc context :response (created {:book-id (get-book-id-from-path context)}))))})
 
 (def unread-book
   {:name :unread-book
@@ -49,12 +56,19 @@
    (fn [context]
      (if-let [book (-> context :book empty?)]
        context
-       (remove-record context)))})
+       (remove-record context)))
+   :leave
+   (fn [context]
+     (if-let [book (-> context :book empty?)]
+       (assoc context :response (not-found ""))
+       (assoc context :response (no-body ""))))})
 
 (def echo
   {:name :echo
    :leave
    (fn [context]
      (let [request (:request context)
-           response (created {:book-id (get-book-id-from-path context)})]
-       (assoc context :response response)))})
+           response (ok "")]
+       (if-let [resp (-> context :response)]
+         context
+         (assoc context :response response))))})
